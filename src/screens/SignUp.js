@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
+  Pressable,
   TouchableWithoutFeedback,
   Image,
   TextInput,
@@ -16,6 +17,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 
 import { colors, fonts, icons, images } from "../constants";
+import { useVisibleToggler } from "../hooks/useToggler";
 
 const styles = StyleSheet.create({
   container: {
@@ -56,9 +58,26 @@ const styles = StyleSheet.create({
     color: colors.white,
     ...fonts.body3,
   },
+  inputWrapper: {
+    width: "100%",
+    flexDirection: "row",
+  },
+  btn: {
+    height: 45,
+    margin: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+  },
+  btnText: {
+    color: colors.white,
+    ...fonts.body4,
+  },
 });
 
 const SignUp = ({ navigation }) => {
+  const { passwordVisible, rightIcon, handleVisible } = useVisibleToggler();
+  const [password, setPassword] = useState("");
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -111,14 +130,13 @@ const SignUp = ({ navigation }) => {
                 Phone Number
               </Text>
 
-              <View style={{ flexDirection: "row", flex: 1 }}>
+              <View style={{ flexDirection: "row", flex: 1, marginBottom: 20 }}>
                 <TouchableOpacity
                   style={{
                     height: 45,
                     paddingVertical: 5,
                     borderBottomColor: colors.white,
                     borderBottomWidth: 1,
-
                     flex: 1,
                   }}
                   onPress={() => console.warn("Flag picker pressed!")}
@@ -133,7 +151,6 @@ const SignUp = ({ navigation }) => {
                 <TextInput
                   style={{
                     marginLeft: 20,
-                    marginBottom: 20,
                     borderBottomWidth: 1,
                     borderBottomColor: colors.white,
                     paddingVertical: 5,
@@ -154,17 +171,41 @@ const SignUp = ({ navigation }) => {
               <Text style={{ color: colors.white, ...fonts.body4 }}>
                 Password
               </Text>
-              <TextInput
-                style={styles.nameInput}
-                placeholder={"Enter Your Password"}
-                placeholderTextColor={colors.lightGray}
-                selectionColor={colors.white}
-                underlineColorAndroid="transparent"
-              />
+              <View style={styles.inputWrapper}>
+                <TextInput
+                  style={styles.nameInput}
+                  autocorrect={false}
+                  textContentType={"newPassword"}
+                  placeholder={"Enter Your Password"}
+                  placeholderTextColor={colors.lightGray}
+                  selectionColor={colors.white}
+                  underlineColorAndroid="transparent"
+                  secureTextEntry={passwordVisible}
+                  value={password}
+                  onChangeText={(val) => setPassword(val)}
+                />
+                <Pressable
+                  style={{ alignSelf: "flex-end" }}
+                  onPress={handleVisible}
+                >
+                  <Text>Eye</Text>
+                </Pressable>
+              </View>
             </>
-          </View>
 
-          {/* btn */}
+            {/* btn */}
+            <Pressable
+              onPress={() => console.warn("Continue pressed!")}
+              style={({ pressed }) => [
+                {
+                  backgroundColor: pressed ? colors.lightGreen : colors.black,
+                },
+                styles.btn,
+              ]}
+            >
+              <Text style={styles.btnText}>Continue</Text>
+            </Pressable>
+          </View>
         </ScrollView>
       </LinearGradient>
     </KeyboardAvoidingView>
